@@ -16,6 +16,34 @@ letter_options = {
     "2": "🟨"
 }
 
+class Letter():
+
+    def __init__(self, character, condition):
+        self.character = character
+        self.condition = condition
+
+
+def convert_to_letter_list(word, conditions):
+    letter_list = []
+
+    for x in range(len(word)):
+        letter_list.append(Letter(word[x], conditions[x]))
+
+    return letter_list
+
+
+def check_weighted_letter_from_list(letter, letter_list):
+    current_letter = None
+
+    for x in letter_list:
+        if letter == x.character:
+            if x.condition != '0':
+                return True
+
+    return False
+
+
+
 with open('answer-list.txt') as f:
     lines = f.readlines()
 
@@ -33,6 +61,7 @@ def possible_words(word_list, input_word, conditions):
 
     for word in word_list:
         invalid_letter_count = 0
+        letter_list = convert_to_letter_list(input_word, conditions)
 
         for i, condition in enumerate(conditions):
 
@@ -40,7 +69,14 @@ def possible_words(word_list, input_word, conditions):
                 invalid_letter_count = invalid_letter_count + 1
 
                 if input_word[i] in word:
-                    break
+                    if not check_weighted_letter_from_list(input_word[i], letter_list):
+                        break
+
+                # check whether there is more than one substring of letter in word
+
+                # if yes, we need to check the condition of that letter in conditions 
+                # if condition is 1 or 2, we have to ignore.
+
 
             elif condition == '1':
                 if word[i] != input_word[i]:
